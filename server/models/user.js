@@ -9,12 +9,24 @@ const userSchema = new Schema({
 
   pwd: { type: String, required: true },
 
-  state:{type:Boolean, default:true}
+  state: { type: Boolean, default: true },
+
+  role: {
+    type: String,
+    required: true,
+  },
 });
+
+userSchema.methods.toJSON = function(){
+  const {__v,pwd, ...user} = this.toObject();
+  return user;
+}
 
 const User = mongoose.model("User", userSchema);
 
 
-module.exports= {
-    User
-}
+
+
+module.exports = {
+  User,
+};
