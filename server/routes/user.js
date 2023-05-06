@@ -21,13 +21,19 @@ router.post('/',[
     validarCampos,
 ],userPost);
 
-router.delete('/',userDelete);
+router.delete('/:id',[
+    check('id','No es un mongo ID Valido').isMongoId(),
+    check('id').custom(existeUsuarioId),
+    validarCampos
+],userDelete);
 
 router.patch('/',userPatch);
 
 router.put('/:id',[
     check('id','No es un mongo ID Valido').isMongoId(),
     check('id').custom(existeUsuarioId),
+    check('role').custom(roleValidation),
+    check('email',"El correo no es valido").isEmail(),
     validarCampos
 ],userPut);
 

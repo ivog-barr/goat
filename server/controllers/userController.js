@@ -3,14 +3,22 @@ const { User } = require('../models/user');
 const bcrypt = require('bcrypt');
 
 
-const userGet = (req = request,res = response)=>{
-    const {q, nombre="no name",page=1, limit=1 } = req.query
- 
+const userGet = async(req = request,res = response)=>{
+    const {desde=0, limit=5 } = req.query;
+
+    const [total,usuarios] = await Promise.all([
+        User.countDocuments({state:true}),
+
+        User.find({state:true})
+            .skip(Number(desde))
+            .limit(Number(limit))
+
+       
+        
+    ]);
     res.json({
-        q,
-        nombre,
-        page,
-        limit
+        total,
+        usuarios
     });
 };
 
@@ -30,10 +38,12 @@ const userPost = async(req = request,res = response)=>{
 
 
 
-const userDelete = (req = request,res = response)=>{
-   
+const userDelete = async (req = request,res = response)=>{
+   const {id} = req.params
+
+    await User.findByIdAndUpdate(id,{state:false})
     res.json({
-        msg :"DELETE API"
+        msg :`Usuario con id ${id} ha sido eliminado efectivamente`
     });
 };
 
@@ -55,8 +65,10 @@ const userPut = async(req = request,res = response)=>{
     res.json(user);
 };
 
-const userPatch = (req = request,res = response)=>{
+const userPatch = async (req = request,res = response)=>{
+    
    
+
     res.json({
         msg:"PATCH API"
     });
