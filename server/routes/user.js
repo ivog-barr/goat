@@ -1,12 +1,13 @@
 const express = require('express');
-const { userGet, userPost, userDelete, userPatch, userPut } = require('../controllers/userController');
+const { userGet, userPost, userDelete, userPut } = require('../controllers/userController');
 const router = express.Router();
 const {check} = require('express-validator');
 const { validarCampos } = require('../middlewares/validarCampos');
 const { roleValidation } = require('../helpers/roleValidation');
 const { emailExiste } = require('../helpers/emailExiste');
 const { existeUsuarioId } = require('../helpers/existeUsuarioId');
-
+const { validarJWT } = require('../middlewares/validar-jwt');
+const { adminRole } = require('../middlewares/validar-roles');
 
 
 
@@ -22,12 +23,14 @@ router.post('/',[
 ],userPost);
 
 router.delete('/:id',[
+    validarJWT,
+    adminRole,
     check('id','No es un mongo ID Valido').isMongoId(),
     check('id').custom(existeUsuarioId),
     validarCampos
 ],userDelete);
 
-router.patch('/',userPatch);
+
 
 router.put('/:id',[
     check('id','No es un mongo ID Valido').isMongoId(),

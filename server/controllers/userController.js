@@ -40,11 +40,12 @@ const userPost = async(req = request,res = response)=>{
 
 const userDelete = async (req = request,res = response)=>{
    const {id} = req.params
+   const authUser = req.user;
 
     await User.findByIdAndUpdate(id,{state:false})
     res.json({
         msg :`Usuario con id ${id} ha sido eliminado efectivamente`
-    });
+    })
 };
 
 
@@ -65,20 +66,9 @@ const userPut = async(req = request,res = response)=>{
     res.json(user);
 };
 
-const userPatch = async (req = request,res = response)=>{
-    
-   
-
-    res.json({
-        msg:"PATCH API"
-    });
-};
-
-
 module.exports ={
     userGet,
     userDelete,
-    userPatch,
     userPost,
     userPut
 }
