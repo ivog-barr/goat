@@ -42,9 +42,10 @@ const userDelete = async (req = request,res = response)=>{
    const {id} = req.params
    const authUser = req.user;
 
-    await User.findByIdAndUpdate(id,{state:false})
+   const updatedUser = await User.findByIdAndUpdate(id,{state:false},{new:true})
     res.json({
-        msg :`Usuario con id ${id} ha sido eliminado efectivamente`
+        updatedUser,
+        authUser
     })
 };
 
